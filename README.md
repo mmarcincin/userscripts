@@ -4,6 +4,7 @@ collection of javascripts to modify webpage content for ViolentMonkey (GreaseMon
 Setup
 -----------------------------------------
 1. Install this extension first if you are using browser:
+
 a) Google Chrome
 extension - ViolentMonkey
 https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag
