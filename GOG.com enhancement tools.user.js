@@ -65,6 +65,7 @@ if (typeof (document.getElementsByClassName("product-title__text")[0]) !== "unde
                 }
             }
         }
+		
     function generateListDelayed() { if (button1.value=='on') {setTimeout(generateList, 1000);} }
     function generateList() {
             var gamesList1 = document.getElementsByClassName("product-title__text");
