@@ -2,8 +2,8 @@
 // @name         GOG.com enhancement tools
 // @description  library export based on sorting + compact view
 // @version      0.0.1
-// @author       https://github.com/itemplari/userscripts
-// @namespace    https://github.com/itemplari/userscripts
+// @author       https://github.com/mmarcincin/userscripts
+// @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.gog.com/account*
 // @grant        none
 // ==/UserScript==

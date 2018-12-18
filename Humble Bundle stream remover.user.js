@@ -2,8 +2,8 @@
 // @name         Humble Bundle stream remover
 // @description  Removes twitch stream from the Gumble bundle page
 // @version      0.0.1
-// @author       https://github.com/itemplari/userscripts
-// @namespace    https://github.com/itemplari/userscripts
+// @author       https://github.com/mmarcincin/userscripts
+// @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
 // @grant        none
 // ==/UserScript==
