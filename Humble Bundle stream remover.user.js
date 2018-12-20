@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Humble Bundle stream remover
-// @description  Removes twitch stream from the Gumble bundle page
+// @description  Removes twitch stream from the Humble Bundle pages
 // @version      0.0.1
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
