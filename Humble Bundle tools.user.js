@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost and game keys export
-// @version      0.0.2
+// @version      0.0.2.1
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/home/*
@@ -230,13 +230,13 @@ function humbleGetGames() {
 			function addCompleteGameList() {
 				getGamesList();
 				var copyText = document.getElementById("humble-custom-gamelist");
-				//copyText.value = "Game Name | Bundle Name" + "\n";
-				copyText.value = "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
-				copyText.value = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>HB Complete Game List</h4>\n" + copyText.value;
+				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Complete Game List</h4>\n";
+                tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
 				for (i = 0; i < gameListAll.length; i++) {
-					copyText.value += gameListAll[i] +"\n";
+					tempText += gameListAll[i] +"\n";
 				}
-				copyText.value += "</body>\n<html>\n"
+				tempText += "</body>\n<html>\n";
+                copyText.value = tempText;
 				copyText.style.display = "block";
 				copyText.focus();
 				copyText.select();
@@ -247,13 +247,14 @@ function humbleGetGames() {
 			function addUnredeemedGameList() {
 				getGamesList();
 				var copyText = document.getElementById("humble-custom-gamelist");
-				//copyText.value = "Game Name | Bundle Name" + "\n";
-				copyText.value = "<table>\n<tr>\n<td>Game Name</td>\n<td>Bundle Name</td>\n</tr>" + "\n";
-				copyText.value = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>HB Unredeemed Game List</h4>\n" + copyText.value;
+				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Unredeemed Game List</h4>\n";
+                tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
 				for (i = 0; i < gameList.length; i++) {
-					copyText.value += gameList[i] +"\n";
+					tempText += gameList[i] +"\n";
 				}
-				copyText.value += "</body>\n<html>\n"
+				tempText += "</body>\n<html>\n";
+                copyText.value = tempText;
+              
 				copyText.style.display = "block";
 				copyText.focus();
 				copyText.select();
