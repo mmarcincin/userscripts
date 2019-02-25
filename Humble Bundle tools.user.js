@@ -1,21 +1,15 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost and game keys export
-// @version      0.0.1
+// @version      0.0.2
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/home/*
 // @grant        none
 // ==/UserScript==
 
-/* edit to fit your currency */
-var otherCurrencySymbol = "€";
-
-
 /* Total cost script content for purchases - start */
 var loadCounter1 = 0;
-var dollarPrice = 0;
-var otherPrice = 0;
 var lastRun1 = 0;
 
 function humbleCalc() {
@@ -24,26 +18,35 @@ function humbleCalc() {
 		if (document.getElementsByClassName("js-unclaimed-purchases-loading").length > 0 && document.getElementsByClassName("js-unclaimed-purchases-loading")[0].style.display === "none") {
 			//if (typeof(document.getElementsByClassName("total")[0]) != "undefined") {
 			if (!(document.getElementById("prices"))) {
+                var currencySigns = [ "$" ];
+                var currencyValues = [ 0 ];
 				do {
 					var priceTable = document.getElementsByClassName("total");
+                    
 					for (i = 0; i < priceTable.length; i++) {
 						var prodPrice = priceTable[i].innerHTML.trim();
 						prodPrice = prodPrice.replace(",", ".");
-						var dollarCheck = prodPrice.indexOf("$");
-						var otherCheck = prodPrice.indexOf(otherCurrencySymbol);
-						if (dollarCheck != "-1") {
-							prodPrice = prodPrice.replace("$","").trim();
-							prodPrice = prodPrice/1;
-							dollarPrice += prodPrice;
-						} else {
-							if (otherCheck != "-1") {
-								prodPrice = prodPrice.replace(otherCurrencySymbol,"").trim();
-								prodPrice = prodPrice/1;
-								otherPrice += prodPrice;
-							}
-						}
-					}      
-					
+						var regExp = /\d+\.\d+/g; 
+                        var cValue = regExp.exec(prodPrice);
+                        
+                        if (typeof(cValue) !== "undefined" && cValue !== null) {
+                            var cSign = prodPrice.replace(cValue[0],"");
+                            cValue = cValue[0]/1;
+                            var cSignNotFound = true;
+                            for (j = 0; j < currencySigns.length; j++) {
+    						    if (cSign == currencySigns[j]) {
+                                    currencyValues[j] += cValue;
+                                    cSignNotFound = false;
+                                    break;
+                                }
+                            }
+                            if (cSignNotFound) {
+                                currencySigns.push(cSign);
+                                currencyValues.push(cValue);
+                            }
+					    }      
+                    }
+                  
 					if (lastRun1 == 1) {
 						lastRun1 = 0;
 					} else {
@@ -62,7 +65,14 @@ function humbleCalc() {
 				var modEle1 = document.getElementsByClassName("sort")[0];
 				var priceElement = document.createElement("div");
 				priceElement.id = "prices";
-				priceElement.innerHTML = "<h1>Total Cost | " + "\$" + dollarPrice.toFixed(2) + " | " + otherCurrencySymbol + otherPrice.toFixed(2) + "</h1>";
+                var totalCost = document.createElement("h1");
+                totalCost.innerHTML = "Total Cost";
+                console.log(currencySigns.length);
+                for (i = 0; i < currencySigns.length; i++) {
+                    totalCost.innerHTML += " | " + currencySigns[i] + currencyValues[i].toFixed(2);
+                    if ((i+1) % 3 == 0) {totalCost.innerHTML += "<br>";}
+                }
+				priceElement.appendChild(totalCost);
 				modEle1.appendChild(priceElement);
 				/*
 	while (document.getElementsByClassName("pagination")[0].getElementsByClassName("hb hb-chevron-right")[0]) {
