@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost and game keys export
-// @version      0.0.2.1
+// @version      0.0.2.2
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/home/*
@@ -23,7 +23,7 @@ function humbleCalc() {
 				do {
 					var priceTable = document.getElementsByClassName("total");
                     
-					for (i = 0; i < priceTable.length; i++) {
+					for (var i = 0; i < priceTable.length; i++) {
 						var prodPrice = priceTable[i].innerHTML.trim();
 						prodPrice = prodPrice.replace(",", ".");
 						var regExp = /\d+\.\d+/g; 
@@ -33,7 +33,7 @@ function humbleCalc() {
                             var cSign = prodPrice.replace(cValue[0],"");
                             cValue = cValue[0]/1;
                             var cSignNotFound = true;
-                            for (j = 0; j < currencySigns.length; j++) {
+                            for (var j = 0; j < currencySigns.length; j++) {
     						    if (cSign == currencySigns[j]) {
                                     currencyValues[j] += cValue;
                                     cSignNotFound = false;
@@ -66,12 +66,13 @@ function humbleCalc() {
 				var priceElement = document.createElement("div");
 				priceElement.id = "prices";
                 var totalCost = document.createElement("h1");
-                totalCost.innerHTML = "Total Cost";
-                console.log(currencySigns.length);
-                for (i = 0; i < currencySigns.length; i++) {
-                    totalCost.innerHTML += " | " + currencySigns[i] + currencyValues[i].toFixed(2);
-                    if ((i+1) % 3 == 0) {totalCost.innerHTML += "<br>";}
+                var totalCostString = "Total Cost";
+                //console.log(currencySigns.length);
+                for (var i = 0; i < currencySigns.length; i++) {
+                    totalCostString += " | " + currencySigns[i] + currencyValues[i].toFixed(2);
+                    if ((i+1) % 3 == 0) {totalCostString += "<br>";}
                 }
+                totalCost.innerHTML = totalCostString;
 				priceElement.appendChild(totalCost);
 				modEle1.appendChild(priceElement);
 				/*
@@ -183,7 +184,7 @@ function humbleGetGames() {
 				var nextPageId2 = document.getElementsByClassName("pagination").length-2;
 				do {
 					var gameTable = document.getElementsByClassName("game-name");
-					for (i = 1; i < gameTable.length; i++) {
+					for (var i = 1; i < gameTable.length; i++) {
 						var gameTitle = gameTable[i].getElementsByTagName("h4")[0].innerHTML;
 						var bundleTitle = gameTable[i].getElementsByTagName("a")[0].innerHTML;
 						if (gameTitle === bundleTitle) { bundleTitle = "Humble Store" }
@@ -232,7 +233,7 @@ function humbleGetGames() {
 				var copyText = document.getElementById("humble-custom-gamelist");
 				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Complete Game List</h4>\n";
                 tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
-				for (i = 0; i < gameListAll.length; i++) {
+				for (var i = 0; i < gameListAll.length; i++) {
 					tempText += gameListAll[i] +"\n";
 				}
 				tempText += "</body>\n<html>\n";
@@ -249,7 +250,7 @@ function humbleGetGames() {
 				var copyText = document.getElementById("humble-custom-gamelist");
 				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Unredeemed Game List</h4>\n";
                 tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
-				for (i = 0; i < gameList.length; i++) {
+				for (var i = 0; i < gameList.length; i++) {
 					tempText += gameList[i] +"\n";
 				}
 				tempText += "</body>\n<html>\n";
@@ -299,7 +300,7 @@ function enhancedBar() {
 	loadCounter3++;
 	if (document.getElementsByClassName("tabbar-tab").length == 4) {
 		var barButtons = document.getElementsByClassName("tabbar-tab"); 
-		for (i = 0; i < barButtons.length; i++) {
+		for (var i = 0; i < barButtons.length; i++) {
 			if (barButtons[i].href.indexOf("/home/purchases") !== -1) {
 				barButtons[i].id = "purchases_button";
 				barButtons[i].addEventListener('click', function () {
@@ -324,16 +325,16 @@ function enhancedBar() {
 
 var nextPageQ3 = setInterval(enhancedBar, 1000);
 
-if (window.location.href === "https://www.humblebundle.com/home/purchases") {
+if (window.location.href.indexOf("https://www.humblebundle.com/home/purchases") === 0) {
 	var nextPageQ1 = setInterval(humbleCalc, 1000);
 } else {
-	if (window.location.href === "https://www.humblebundle.com/home/keys") {
+	if (window.location.href.indexOf("https://www.humblebundle.com/home/keys") === 0) {
 		var nextPageQ2 = setInterval(humbleGetGames, 1000);
 	}
 }
 
 
-//var barButtons = document.getElementsByClassName("tabbar-tab"); for (i = 0; i < barButtons.length; i++) {if (barButtons[i].href.indexOf("/home/purchases")!==-1) { barButtons[i].addEventListener('click', function () {var nextPageQ1 = setInterval(humbleCalc, 1000);}); break;}}
+//var barButtons = document.getElementsByClassName("tabbar-tab"); for (var i = 0; i < barButtons.length; i++) {if (barButtons[i].href.indexOf("/home/purchases")!==-1) { barButtons[i].addEventListener('click', function () {var nextPageQ1 = setInterval(humbleCalc, 1000);}); break;}}
 //
 //https://www.w3schools.com/html/html_tables.asp
 //https://gomakethings.com/why-you-shouldnt-attach-event-listeners-in-a-for-loop-with-vanilla-javascript/
