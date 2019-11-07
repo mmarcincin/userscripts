@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle stream remover
 // @description  removes twitch stream from the humble bundle page and several hb tweaks
-// @version      0.0.2
+// @version      0.0.2.1
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -55,7 +55,8 @@ function customPriceIncrease() {
 		var tiersInfoAmount = []
 		var avgAmount = Math.round(window.models.keyentity_json.avg * 100) + 1;
 		var paidAmount = window.models.keyentity_json.cleanfamilytotal.amount * 100;
-		var addedAmount = document.getElementsByClassName("master-amount")[0].value * 100;
+		//var addedAmount = document.getElementsByClassName("master-amount")[0].value * 100;
+        var addedAmount = document.getElementsByClassName("new-order-amount")[0].innerHTML.substring(1) * 100;
 		var avgI = -1;
 		var addedAvg = 0;
 		for (var i = 0; i < tiersData.length; i++) {
@@ -97,7 +98,8 @@ function customPriceIncrease() {
 				priceCounter.innerHTML = priceCounterString;
 				document.getElementsByClassName("order-form-amount-error-container")[0].appendChild(priceCounter);
 			}
-			var addedAmount = document.getElementsByClassName("master-amount")[0].value * 100;
+			//var addedAmount = document.getElementsByClassName("master-amount")[0].value * 100;
+            var addedAmount = document.getElementsByClassName("new-order-amount")[0].innerHTML.substring(1) * 100;
 			if (!((typeof addedAmount) == "number")) {
 				addedAmount = 0;
 			}
@@ -116,6 +118,10 @@ function customPriceIncrease() {
 			}
 		}
 		document.getElementsByClassName("master-amount")[0].addEventListener("input", calculatePrice);
+        var priceOptions = document.getElementsByClassName("radio-amount");
+        for (var i = 0; i < priceOptions.length; i++) {
+            priceOptions[i].addEventListener("input", calculatePrice);
+        }
 		clearInterval(customPriceLoop);
 	} else {
 		if (customPriceCounter > 6) {
