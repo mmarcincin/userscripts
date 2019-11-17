@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Humble Bundle tools
-// @description  Total cost and game keys export
-// @version      0.0.2.2
+// @description  Total cost, game keys export and other enhancements
+// @version      0.0.2.3
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
-// @include      https://www.humblebundle.com/home/*
+// @include      https://www.humblebundle.com/*
 // @grant        none
 // ==/UserScript==
 
@@ -334,8 +334,159 @@ if (window.location.href.indexOf("https://www.humblebundle.com/home/purchases") 
 }
 
 
-//var barButtons = document.getElementsByClassName("tabbar-tab"); for (var i = 0; i < barButtons.length; i++) {if (barButtons[i].href.indexOf("/home/purchases")!==-1) { barButtons[i].addEventListener('click', function () {var nextPageQ1 = setInterval(humbleCalc, 1000);}); break;}}
-//
+/* Humble Bundle dropdown menu additions - start */
+var pageSize = 0;
+var eleEvent = document.getElementsByClassName("js-user-item-dropdown-toggle js-navbar-dropdown js-maintain-scrollbar-on-dropdown js-user-navbar-item navbar-item navbar-item-dropdown user-navbar-item logged-in button-title no-style-button")[0];
+function addDropdownLink() {
+	if (document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items").length > 0) {
+		var appendEle = document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items")[0];
+		var troveLink = document.createElement("span");
+		troveLink.innerHTML = '<a href="/monthly/trove?hmb_source=navbar" class="navbar-item-dropdown-item">       <i class="navbar-item-dropdown-icon hb hb-library has-perks"></i>       Trove     </a>';
+		appendEle.insertBefore(troveLink, appendEle.getElementsByClassName("navbar-item-dropdown-item")[1]);
+        var billingLink = document.createElement("span");
+        billingLink.innerHTML = '<a href="/user/subscriptions/humble_monthly/billing?hmb_source=navbar" class="navbar-item-dropdown-item">      <i class="navbar-item-dropdown-icon hb hb-money has-perks"></i>      Billing    </a>'
+        appendEle.insertBefore(billingLink, appendEle.querySelector('a[href="/user/settings?hmb_source=navbar"]'));
+	}
+}
+
+function delayedMenuAddition() {
+  if (document.getElementsByClassName("navbar-content")[0].innerHTML.length === pageSize) {
+      eleEvent.addEventListener('click', addDropdownLink);
+      clearInterval(delayedMenuLoop);
+      console.log("Menu modified successfully");
+  } else {
+      pageSize = document.getElementsByClassName("navbar-content")[0].innerHTML.length;
+  }
+
+}
+
+if (typeof eleEvent !== "undefined") {
+    var delayedMenuLoop = setInterval(delayedMenuAddition, 400);
+}
+/* Humble Bundle dropdown menu additions - end */
+
+/* Humble Bundle custom price increase hints - start */
+var customPriceCounter = 0;
+function customPriceIncrease() {
+	customPriceCounter++;
+	if (document.getElementsByClassName("master-amount").length > 0) {
+		var tiersData = window.models.product_json.monetary_content_event_data;
+		var tiersInfoText = []
+		var tiersInfoAmount = []
+		var avgAmount = Math.round(window.models.keyentity_json.avg * 100) + 1;
+		var paidAmount = window.models.keyentity_json.cleanfamilytotal.amount * 100;
+		var addedAmount = document.getElementsByClassName("master-amount")[0].value * 100;
+		var avgI = -1;
+		var addedAvg = 0;
+		for (var i = 0; i < tiersData.length; i++) {
+			if (tiersData[i].type === "average") {
+				avgI = i;
+			}
+		}
+		for (var i = 0; i < tiersData.length; i++) {
+			if (tiersData[i].type !== "average") {
+				var tierValue = tiersData[i].amount * 100;
+				if (tierValue >= avgAmount && avgI > -1) {
+					tiersInfoText.push(tiersData[avgI]["warning-locked"]);
+					tiersInfoAmount.push(avgAmount);
+					addedAvg = 1;
+				}
+				tiersInfoText.push(tiersData[i]["warning-locked"]);
+				tiersInfoAmount.push(tierValue);
+			}
+		}
+		if (avgI > -1 && addedAvg === 0) {
+			tiersInfoText.push(tiersData[avgI]["warning-locked"]);
+			tiersInfoAmount.push(avgAmount);
+		}
+		//console.log(tiersInfoText);
+		//console.log(tiersInfoAmount);
+
+		var priceCounter = document.createElement("div");
+		var priceCounterString = "";
+		var difference = 0;
+		for (var i = 0; i < tiersData.length; i++) {
+			difference = tiersInfoAmount[i] - paidAmount - addedAmount;
+			tiersInfoText[i] = tiersInfoText[i].replace('<%= money_difference %>', '$<span class="custom-tiers-inTextAmount">' + (difference / 100).toFixed(2) + '</span>');
+			priceCounterString += '<div class="custom-tiers"><aside class="order-form-error-msg penny-error ">   <div class="order-form-error-text-container">     <p class="order-form-error-text">' + tiersInfoText[i] + '</p>     <a class="js-readjust-order-amount order-form-error-call-to-action">Add $<span class="custom-tiers-add">' + (difference / 100).toFixed(2) + '</span></a>   </div> </aside> </div>';
+		}
+      
+        var masterAmountHolder = document.getElementsByClassName("master-amount")[0];
+        var newOrderAmountHolder = document.getElementsByClassName("new-order-amount")[0];
+        var customTiersHolder = document.getElementsByClassName("custom-tiers");
+        var customTiersAddHolder = document.getElementsByClassName("custom-tiers-add");
+        var customTiersInTextAmountHolder = document.getElementsByClassName("custom-tiers-inTextAmount");
+        /*
+        (async() => {
+            if (window.location.href === "https://www.humblebundle.com/subscription#") {
+                var tierCalcEleHolder = document.getElementsByClassName("download-page-wrapper js-download-page-wrapper page-header-text")[0];
+                var tierCalcToogle = tdocument.createElement("div");
+                tierCalcToogle.innerHTML = '   <input type="radio" id="custom-hints-on" name="custom-hints-toogle">   <label>On</label>   <input type="radio" id="custom-hints-off" name="custom-hints-toogle">   <label>Off</label>   <br> ';
+                tierCalcEleHolder.appendChild("tierCalcToogle");
+                let getCustomHintsToogle = await GM_getValue('customHints', 1);
+                if (getCustomHintsToogle === 1) {
+                    document.getElementById("custom-hints-on").setAttribute('checked',''); 
+                } else {
+                    document.getElementById("custom-hints-off").setAttribute('checked',''); 
+                }
+              /*
+                var bundleString = "";
+                await GM_setValue('customHints', bundleString);
+                /
+            }
+
+			let getCustomHintsToogle = await GM_getValue('customHints', 0);
+		})();*/
+      
+		function calculatePrice() {
+			if (!(customTiersHolder.length > 0)) {
+				var priceCounter = document.createElement("div");
+				priceCounter.innerHTML = priceCounterString;
+				document.getElementsByClassName("order-form-amount-error-container")[0].appendChild(priceCounter);
+			}
+
+            if (!(document.getElementsByClassName("radio-amount custom-radio-amount")[0].checked)) {
+                var addedAmount = newOrderAmountHolder.innerHTML.substring(1) * 100;
+            } else {
+                var addedAmount = masterAmountHolder.value * 100;
+            }
+
+			if (!((typeof addedAmount) == "number")) {
+				addedAmount = 0;
+			}
+			var differenceNumber = 0;
+			for (var i = 0; i < tiersData.length; i++) {
+				var differenceNumber = tiersInfoAmount[i] - paidAmount - addedAmount;
+				if (differenceNumber <= 0) {
+					customTiersHolder[i].style.display = "none";
+				} else {
+					customTiersHolder[i].style.display = "block";
+				}
+				customTiersAddHolder[i].innerHTML = (differenceNumber / 100).toFixed(2);
+				if (i > 0) {
+					customTiersInTextAmountHolder[i - 1].innerHTML = (differenceNumber / 100).toFixed(2);
+				}
+			}
+		}
+        calculatePrice();
+		masterAmountHolder.addEventListener("input", calculatePrice);
+
+        var priceOptions = document.getElementsByClassName("radio-amount");
+        for (var i = 0; i < priceOptions.length; i++) {
+            priceOptions[i].addEventListener("input", calculatePrice);
+        }
+		clearInterval(customPriceLoop);
+	} else {
+		if (customPriceCounter > 6) {
+			clearInterval(customPriceLoop);
+		}
+	}
+}
+
+if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) { var customPriceLoop = setInterval(customPriceIncrease, 1000); };
+/* Humble Bundle custom price increase hints - end */
+
+
 //https://www.w3schools.com/html/html_tables.asp
 //https://gomakethings.com/why-you-shouldnt-attach-event-listeners-in-a-for-loop-with-vanilla-javascript/
 //https://stackoverflow.com/questions/7410784/how-can-i-limit-table-column-width
