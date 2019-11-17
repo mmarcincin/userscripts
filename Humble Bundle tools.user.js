@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.2.3
+// @version      0.0.2.4
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -323,7 +323,7 @@ function enhancedBar() {
 	}
 }
 
-var nextPageQ3 = setInterval(enhancedBar, 1000);
+if (window.location.href.indexOf("https://www.humblebundle.com/home/") === 0) { var nextPageQ3 = setInterval(enhancedBar, 1000); }
 
 if (window.location.href.indexOf("https://www.humblebundle.com/home/purchases") === 0) {
 	var nextPageQ1 = setInterval(humbleCalc, 1000);
