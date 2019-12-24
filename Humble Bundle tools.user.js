@@ -1,12 +1,21 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.2.4
+// @version      0.0.2.5
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
 // @grant        none
 // ==/UserScript==
+
+function addCssStyle(rule) {
+		var css = document.createElement("style"); // Creates <style></style>
+		css.className = "customViewStyle";
+		css.type = "text/css"; // Specifies the type
+		if (css.styleSheet) css.styleSheet.cssText = rule; // Support for IE
+		else css.appendChild(document.createTextNode(rule)); // Support for the rest
+		document.getElementsByTagName("head")[0].appendChild(css); // Specifies where to place the css
+}
 
 /* Total cost script content for purchases - start */
 var loadCounter1 = 0;
@@ -485,6 +494,13 @@ function customPriceIncrease() {
 
 if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) { var customPriceLoop = setInterval(customPriceIncrease, 1000); };
 /* Humble Bundle custom price increase hints - end */
+
+
+/* Humble Bundle custom pause button color - start */
+var customPauseColor = '.js-pause-btn.button-v2.rectangular-button.blue {background-color: #42f542; border: 1px solid #42f542;}';
+addCssStyle(customPauseColor);
+
+/* Humble Bundle custom pause button color - end */
 
 
 //https://www.w3schools.com/html/html_tables.asp
