@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.2.5
+// @version      0.0.2.6
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -118,6 +118,7 @@ function humbleGetGames() {
 			//if (document.getElementsByClassName("keyfield redeemed").length > 0) {document.getElementById("hide-redeemed").click();}
 			var gameListAll = [];
 			var gameList = [];
+      var gameListInfo = [];
 			
 			var x2 = document.createElement('textarea');
 			x2.setAttribute("id", "humble-custom-gamelist");
@@ -147,7 +148,7 @@ function humbleGetGames() {
 			button21.setAttribute('type', 'button');
 			button21.setAttribute('id', 'button-copy1');
 			button21.setAttribute('onclick', ';return false;');
-			button21.setAttribute('title', 'Copy complete game list to clipboard');
+			button21.setAttribute('title', "Copy complete keys' title list to clipboard");
 
 			var span21 = document.createElement('span');
 			span21.setAttribute('class', 'humble-uix-button-content');
@@ -158,7 +159,7 @@ function humbleGetGames() {
 			button22.setAttribute('type', 'button');
 			button22.setAttribute('id', 'button-save1');
 			button22.setAttribute('onclick', ';return false;');
-			button22.setAttribute('title', 'Save complete game list as file');
+			button22.setAttribute('title', "Save complete keys' title list as file");
 
 			var span22 = document.createElement('span');
 			span22.setAttribute('class', 'humble-uix-button-content');
@@ -170,7 +171,7 @@ function humbleGetGames() {
 			button23.setAttribute('type', 'button');
 			button23.setAttribute('id', 'button-copy2');
 			button23.setAttribute('onclick', ';return false;');
-			button23.setAttribute('title', 'Copy unredeemed game list to clipboard');
+			button23.setAttribute('title', "Copy unredeemed keys' title list to clipboard");
 
 			var span23 = document.createElement('span');
 			span23.setAttribute('class', 'humble-uix-button-content');
@@ -181,25 +182,74 @@ function humbleGetGames() {
 			button24.setAttribute('type', 'button');
 			button24.setAttribute('id', 'button-save2');
 			button24.setAttribute('onclick', ';return false;');
-			button24.setAttribute('title', 'Save unredeemed game list as file');
+			button24.setAttribute('title', "Save unredeemed keys' title list as file");
 
 			var span24 = document.createElement('span');
 			span24.setAttribute('class', 'humble-uix-button-content');
 			span24.innerHTML = 'Save File';
 			button24.appendChild(span24);
+      /* game list (+ expiration info) buttons */
+			var button25 = document.createElement('button');
+			button25.setAttribute('type', 'button');
+			button25.setAttribute('id', 'button-copy3');
+			button25.setAttribute('onclick', ';return false;');
+			button25.setAttribute('title', "Copy expiring keys' title list (+ expiration info) to clipboard");
+
+			var span25 = document.createElement('span');
+			span25.setAttribute('class', 'humble-uix-button-content');
+			span25.innerHTML = 'Copy';
+			button25.appendChild(span25);
+			
+			var button26 = document.createElement('button');
+			button26.setAttribute('type', 'button');
+			button26.setAttribute('id', 'button-save3');
+			button26.setAttribute('onclick', ';return false;');
+			button26.setAttribute('title', "Save expiring keys' title list (+ expiration info) as file");
+
+			var span26 = document.createElement('span');
+			span26.setAttribute('class', 'humble-uix-button-content');
+			span26.innerHTML = 'Save File';
+			button26.appendChild(span26);
 			function getGamesList() {
 				gameListAll = [];
 				gameList = [];
+        gameListInfo = [];
 				var nextPageId2 = document.getElementsByClassName("pagination").length-2;
 				do {
 					var gameTable = document.getElementsByClassName("game-name");
 					for (var i = 1; i < gameTable.length; i++) {
+            var bundleTitle = "";
 						var gameTitle = gameTable[i].getElementsByTagName("h4")[0].innerHTML;
-						var bundleTitle = gameTable[i].getElementsByTagName("a")[0].innerHTML;
+            if (typeof(gameTable[i].getElementsByTagName("a")[0]) !== "undefined") {
+						    bundleTitle = gameTable[i].getElementsByTagName("a")[0].innerHTML;
+            } else {
+                if (gameTitle.toLowerCase().indexOf("humble choice") !== -1) {
+                    bundleTitle = "Humble Choice";
+                } else {
+                    bundleTitle = "none";
+                }
+            }
+            var redeem1 = false;
+            var redeemInfo = "";
+            if (gameTable[i].parentNode.getElementsByClassName("custom-instruction").length > 0) {
+                var redeemInfoTemp = gameTable[i].parentNode.getElementsByClassName("custom-instruction")[0].innerText;
+                if (redeemInfoTemp.indexOf(", 20") !== -1) {
+                    redeem1 = true;
+                    redeemInfo = redeemInfoTemp.substring(redeemInfoTemp.indexOf("Redemption Instructions") + 23).trim();
+                }
+            } else {
+                if (gameTable[i].parentNode.getElementsByClassName("expiration-messaging").length > 0) {
+                    redeem1 = true;
+                    redeemInfo = gameTable[i].parentNode.getElementsByClassName("expiration-messaging")[0].innerText.trim();
+                }
+            }
+            
 						if (gameTitle === bundleTitle) { bundleTitle = "Humble Store" }
 						//var addString = gameTitle + " | " + bundleTitle;
 						var addString = "<tr>\n<td>" + gameTitle + "</td>\n<td>" + bundleTitle + "</td>\n</tr>\n";
+            var addStringAndInfo = "<tr>\n<td>" + gameTitle + "</td>\n<td>" + bundleTitle + "</td>\n<td>" + redeemInfo + "</td>\n</tr>\n";
 						if (gameTable[i].parentNode.getElementsByClassName("keyfield redeemed").length === 0) { gameList.push(addString); }
+            if (redeem1) { gameListInfo.push(addStringAndInfo); }
 						gameListAll.push(addString);
 					}
 
@@ -220,6 +270,7 @@ function humbleGetGames() {
 				console.log("gameList length: " + gameListAll.length);
 				gameList.sort();
 				gameListAll.sort();
+        gameListInfo.sort();
 			}
 			
 			var modEle2 = document.getElementsByClassName("sort")[document.getElementsByClassName("sort").length-1];
@@ -227,13 +278,16 @@ function humbleGetGames() {
 			var buttonsElement = document.createElement("div");
 			var blankSpace2 = document.createElement("span");
 			blankSpace2.style.marginRight = "20px";
-			buttonsElement.innerHTML += "Complete Game List: ";      
+			buttonsElement.innerHTML += "Complete Keys' Title List: ";      
 			buttonsElement.appendChild(button21);
 			buttonsElement.appendChild(button22);
 			buttonsElement.appendChild(blankSpace2);
-			buttonsElement.innerHTML += "Unredeemed Game List: ";
+			buttonsElement.innerHTML += "Unredeemed Keys' Title List: ";
 			buttonsElement.appendChild(button23);
 			buttonsElement.appendChild(button24);
+      buttonsElement.innerHTML += "\n<br><br>\nExpiring Keys' Title List (+ expiration info): ";
+			buttonsElement.appendChild(button25);
+			buttonsElement.appendChild(button26);
 			
 			modEle2.appendChild(buttonsElement);
 			
@@ -271,6 +325,24 @@ function humbleGetGames() {
 				document.execCommand("copy");
 				copyText.style.display = "none";
 			}
+      
+      function addGameListAndInfo() {
+				getGamesList();
+				var copyText = document.getElementById("humble-custom-gamelist");
+				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Unredeemed Game List</h4>\n";
+                tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n<th>Expiration Information</th>\n</tr>" + "\n";
+				for (var i = 0; i < gameListInfo.length; i++) {
+					tempText += gameListInfo[i] +"\n";
+				}
+				tempText += "</body>\n<html>\n";
+                copyText.value = tempText;
+              
+				copyText.style.display = "block";
+				copyText.focus();
+				copyText.select();
+				document.execCommand("copy");
+				copyText.style.display = "none";
+			}
 			
 			document.getElementById("button-copy1").addEventListener('click', addCompleteGameList);
 			//button21.addEventListener('click', addCompleteGameList);
@@ -284,6 +356,13 @@ function humbleGetGames() {
 			document.getElementById("button-save2").addEventListener('click', function () {
 				addUnredeemedGameList();
 				gamelistTitle = "Unredeemed";
+				saveTextAsFile();
+			});
+      
+      document.getElementById("button-copy3").addEventListener('click', addGameListAndInfo);
+			document.getElementById("button-save3").addEventListener('click', function () {
+				addGameListAndInfo();
+				gamelistTitle = "Info_and";
 				saveTextAsFile();
 			});
 		}
