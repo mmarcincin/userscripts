@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.2.6
+// @version      0.0.2.7
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -294,8 +294,8 @@ function humbleGetGames() {
 			function addCompleteGameList() {
 				getGamesList();
 				var copyText = document.getElementById("humble-custom-gamelist");
-				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Complete Game List</h4>\n";
-                tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
+				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Complete Keys' Title List</h4>\n";
+                tempText += "<table>\n<tr>\n<th>Product Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
 				for (var i = 0; i < gameListAll.length; i++) {
 					tempText += gameListAll[i] +"\n";
 				}
@@ -311,8 +311,8 @@ function humbleGetGames() {
 			function addUnredeemedGameList() {
 				getGamesList();
 				var copyText = document.getElementById("humble-custom-gamelist");
-				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Unredeemed Game List</h4>\n";
-                tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
+				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Unredeemed Keys' Title List</h4>\n";
+                tempText += "<table>\n<tr>\n<th>Product Name</th>\n<th>Bundle Name</th>\n</tr>" + "\n";
 				for (var i = 0; i < gameList.length; i++) {
 					tempText += gameList[i] +"\n";
 				}
@@ -329,8 +329,8 @@ function humbleGetGames() {
       function addGameListAndInfo() {
 				getGamesList();
 				var copyText = document.getElementById("humble-custom-gamelist");
-				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Unredeemed Game List</h4>\n";
-                tempText += "<table>\n<tr>\n<th>Game Name</th>\n<th>Bundle Name</th>\n<th>Expiration Information</th>\n</tr>" + "\n";
+				var tempText = "<html>\n<head>\n<style>\ntable, th, td {border: 1px solid black; border-collapse: collapse;}\nth, td {max-width: 500px; padding: 5px;}\ntd {word-wrap: break-word;}\ntr:nth-child(even) {background-color: #dddddd;}\n</style>\n</head>\n<body>\n<h2>Humble Bundle Expiring Keys' Title List (+ expiration info)</h4>\n";
+                tempText += "<table>\n<tr>\n<th>Product Name</th>\n<th>Bundle Name</th>\n<th>Expiration Information</th>\n</tr>" + "\n";
 				for (var i = 0; i < gameListInfo.length; i++) {
 					tempText += gameListInfo[i] +"\n";
 				}
@@ -453,7 +453,7 @@ if (typeof eleEvent !== "undefined") {
 }
 /* Humble Bundle dropdown menu additions - end */
 
-/* Humble Bundle custom price increase hints - start */
+/* Humble Bundle custom price increase hints - start - disabled - default one works and the source code for custom one was removed -> throws errors */
 var customPriceCounter = 0;
 function customPriceIncrease() {
 	customPriceCounter++;
@@ -571,7 +571,7 @@ function customPriceIncrease() {
 	}
 }
 
-if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) { var customPriceLoop = setInterval(customPriceIncrease, 1000); };
+//if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) { var customPriceLoop = setInterval(customPriceIncrease, 1000); };
 /* Humble Bundle custom price increase hints - end */
 
 
