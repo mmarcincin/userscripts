@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.2.7
+// @version      0.0.2.8
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -580,6 +580,35 @@ var customPauseColor = '.js-pause-btn.button-v2.rectangular-button.blue {backgro
 addCssStyle(customPauseColor);
 
 /* Humble Bundle custom pause button color - end */
+
+/* Humble Bundle custom Humble Choice Selection menu button - start */
+var loadCounter4 = 0;
+
+function getHBselectionLink() {
+    loadCounter4++;
+    if (document.getElementsByClassName("simple-tile-view one-third monthly navbar-tile").length > 0) {
+        var curHBname = document.getElementsByClassName("simple-tile-view one-third monthly navbar-tile")[0].getElementsByClassName("name")[0].innerHTML.toLowerCase().split(" ");
+        var curHBselection = "/subscription/" + curHBname[0] + "-" + curHBname[1] + "?hmb_source=navbar";
+        console.log(curHBselection);
+        var curChoiceEle = document.createElement("a");
+        curChoiceEle.className = "navbar-item not-dropdown button-title";
+        curChoiceEle.href = curHBselection;
+        curChoiceEle.innerHTML = '<span class="navbar-icon-text-wrapper">       <i class="navbar-item-icon hb hb-choice mobile"></i>       <span class="navbar-item-text">Choice Selection</span>     </span>';
+        if (document.getElementsByClassName("tabs tabs-navbar-item js-tabs-navbar-item js-maintain-scrollbar-on-dropdown").length > 0) {
+            document.getElementsByClassName("tabs tabs-navbar-item js-tabs-navbar-item js-maintain-scrollbar-on-dropdown")[0].appendChild(curChoiceEle);
+        }
+        clearInterval(getHBselectionLinkLoop);
+    } else {
+      if (loadCounter4 > 8) {
+          loadCounter4 = 0;
+          console.log("Your main humble bundle menu took too long to load.");
+          clearInterval(getHBselectionLinkLoop);
+      }
+    }
+}
+
+var getHBselectionLinkLoop = setInterval(getHBselectionLink, 2000);
+/* Humble Bundle custom Humble Choice Selection menu button - end */
 
 
 //https://www.w3schools.com/html/html_tables.asp
