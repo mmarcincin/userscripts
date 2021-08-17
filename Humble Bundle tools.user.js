@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.2.9
+// @version      0.0.3.0
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -442,17 +442,68 @@ if (window.location.href.indexOf("https://www.humblebundle.com/home/purchases") 
 var pageSize = 0;
 var eleEvent = document.getElementsByClassName("js-user-item-dropdown-toggle js-navbar-dropdown js-maintain-scrollbar-on-dropdown js-user-navbar-item navbar-item navbar-item-dropdown user-navbar-item logged-in button-title no-style-button")[0];
 function addDropdownLink() {
-	if (document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items").length > 0) {
-		var appendEle = document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items")[0];
+	if (document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items user-items nav-dropdown-items").length > 0) {
+		var appendEle = document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items user-items nav-dropdown-items")[0];
 		var troveLink = document.createElement("span");
 		troveLink.innerHTML = '<a href="/monthly/trove?hmb_source=navbar" class="navbar-item-dropdown-item">       <i class="navbar-item-dropdown-icon hb hb-library has-perks"></i>       Trove     </a>';
 		appendEle.insertBefore(troveLink, appendEle.getElementsByClassName("navbar-item-dropdown-item")[1]);
 		var billingLink = document.createElement("span");
-		billingLink.innerHTML = '<a href="/user/subscriptions/humble_monthly/billing?hmb_source=navbar" class="navbar-item-dropdown-item">      <i class="navbar-item-dropdown-icon hb hb-money has-perks"></i>      Billing    </a>'
-			appendEle.insertBefore(billingLink, appendEle.querySelector('a[href="/user/settings?hmb_source=navbar"]'));
+		billingLink.innerHTML = '<a href="/user/subscriptions/humble_monthly/billing?hmb_source=navbar" class="navbar-item-dropdown-item">      <i class="navbar-item-dropdown-icon hb hb-money has-perks"></i>      Billing    </a>';
+		appendEle.insertBefore(billingLink, appendEle.querySelector('a[href="/user/settings?hmb_source=navbar"]'));
+    appendEle.querySelector('a[href="/subscription/home?hmb_source=navbar"]').value += appendEle.querySelector('a[href="/subscription/home?hmb_source=navbar"]').value;
+  	var appendEle = document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items user-items nav-dropdown-items")[0];
+    var menuLinks = appendEle.getElementsByTagName("a");
+    var linkImg = document.createElement("i");
+    logoutEle = appendEle.getElementsByClassName("navbar-item-dropdown-item js-navbar-logout")[0];
+    linkImg.className = "navbar-item-dropdown-icon hb hb-sign-out";
+    logoutEle.insertBefore(linkImg, logoutEle.firstChild);
+    
+    for (var i = 0; i < menuLinks.length; i++) {
+      var linkImg = document.createElement("i");
+      switch(menuLinks[i].href) {
+        case "https://www.humblebundle.com/subscription/home?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-choice has-perks";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/home/library?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-library";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/home/purchases?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-tier";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/home/keys?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-key";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/home/coupons?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-scissors";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/store/wishlist?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-star";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/user/wallet?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-money";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/refer?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-giftbox";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+          break;
+        case "https://www.humblebundle.com/user/settings?hmb_source=navbar":
+          linkImg.className = "navbar-item-dropdown-icon hb hb-cog";
+          menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
+      }
+    }
 	}
 }
 
+addDropdownLink();
+/* dropdown menu is created with page load and also no longer scrapped when it's opened anymore - start */
+/*
 function delayedMenuAddition() {
 	if (document.getElementsByClassName("navbar-content")[0].innerHTML.length === pageSize) {
 		eleEvent.addEventListener('click', addDropdownLink);
@@ -467,6 +518,9 @@ function delayedMenuAddition() {
 if (typeof eleEvent !== "undefined") {
 	var delayedMenuLoop = setInterval(delayedMenuAddition, 400);
 }
+*/
+/* dropdown menu is created with page load and also no longer scrapped when it's opened anymore - start */
+
 /* Humble Bundle dropdown menu additions - end */
 
 /* Humble Bundle custom price increase hints - start - disabled - default one works and the source code for custom one was removed -> throws errors */
@@ -601,7 +655,7 @@ var loadCounter4 = 0;
 
 function getHBselectionLink() {
 	loadCounter4++;
-	if (document.getElementsByClassName("tabs tabs-navbar-item js-tabs-navbar-item js-maintain-scrollbar-on-dropdown").length > 0) {
+	if (document.getElementsByClassName("tabs tabs-navbar-item").length > 0) {
 		/*
 		var curHBname = document.getElementsByClassName("simple-tile-view one-third monthly navbar-tile")[0].getElementsByClassName("name")[0].innerHTML.toLowerCase().split(" ");
 		var curHBselection = "/subscription/" + curHBname[0] + "-" + curHBname[1] + "?hmb_source=navbar";
@@ -682,9 +736,9 @@ function getHBselectionLink() {
 		var curChoiceEle = document.createElement("a");
 		curChoiceEle.className = "navbar-item not-dropdown button-title";
 		curChoiceEle.href = curHBselection;
-		curChoiceEle.innerHTML = '<span class="navbar-icon-text-wrapper">       <i class="navbar-item-icon hb hb-choice mobile"></i>       <span class="navbar-item-text">Choice Selection</span>     </span>';
+		curChoiceEle.innerHTML = '<span class="navbar-icon-text-wrapper">      <span class="navbar-item-text">Choice Selection</span>    </span>';
 		//if (document.getElementsByClassName("tabs tabs-navbar-item js-tabs-navbar-item js-maintain-scrollbar-on-dropdown").length > 0) {
-		document.getElementsByClassName("tabs tabs-navbar-item js-tabs-navbar-item js-maintain-scrollbar-on-dropdown")[0].appendChild(curChoiceEle);
+		document.getElementsByClassName("tabs tabs-navbar-item")[0].appendChild(curChoiceEle);
 		//}
 		clearInterval(getHBselectionLinkLoop);
 	} else {
@@ -696,7 +750,7 @@ function getHBselectionLink() {
 	}
 }
 
-var getHBselectionLinkLoop = setInterval(getHBselectionLink, 2000);
+var getHBselectionLinkLoop = setInterval(getHBselectionLink, 1000);
 /* Humble Bundle custom Humble Choice Selection menu button - end */
 
 //https://www.w3schools.com/html/html_tables.asp
