@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.3.0
+// @version      0.0.3.1
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -458,7 +458,7 @@ function addDropdownLink() {
     linkImg.className = "navbar-item-dropdown-icon hb hb-sign-out";
     logoutEle.insertBefore(linkImg, logoutEle.firstChild);
     
-    for (var i = 0; i < menuLinks.length; i++) {
+    for (var i = 0; i < menuLinks.length - 1; i++) {
       var linkImg = document.createElement("i");
       switch(menuLinks[i].href) {
         case "https://www.humblebundle.com/subscription/home?hmb_source=navbar":
