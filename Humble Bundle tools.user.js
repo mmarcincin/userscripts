@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.3.1
+// @version      0.0.3.2
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -450,8 +450,6 @@ function addDropdownLink() {
 		var billingLink = document.createElement("span");
 		billingLink.innerHTML = '<a href="/user/subscriptions/humble_monthly/billing?hmb_source=navbar" class="navbar-item-dropdown-item">      <i class="navbar-item-dropdown-icon hb hb-money has-perks"></i>      Billing    </a>';
 		appendEle.insertBefore(billingLink, appendEle.querySelector('a[href="/user/settings?hmb_source=navbar"]'));
-    appendEle.querySelector('a[href="/subscription/home?hmb_source=navbar"]').value += appendEle.querySelector('a[href="/subscription/home?hmb_source=navbar"]').value;
-  	var appendEle = document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items user-items nav-dropdown-items")[0];
     var menuLinks = appendEle.getElementsByTagName("a");
     var linkImg = document.createElement("i");
     logoutEle = appendEle.getElementsByClassName("navbar-item-dropdown-item js-navbar-logout")[0];
