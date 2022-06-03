@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.3.3
+// @version      0.0.3.4
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -755,11 +755,15 @@ if (window.top === window.self) {
 
 	/* custom Humble Choice Link for game selection from Humble Choice purchases link  - start */
 	function customChoiceLeftSelection() {
-		if (document.getElementById("download-page-referral") && document.getElementsByClassName("js-choice-whitebox-holder").length > 0 && document.getElementsByClassName("js-choice-whitebox-holder")[0].getElementsByClassName("button-v2 rectangular-button choice-selection").length === 0) {
+		if (document.getElementById("download-page-referral") && document.getElementsByClassName("js-choice-whitebox-holder").length > 0 && (document.getElementsByClassName("js-choice-whitebox-holder")[0].getElementsByClassName("button-v2 rectangular-button choice-selection").length === 0 || document.getElementsByClassName("js-choice-whitebox-holder")[0].getElementsByClassName("button-v2 rectangular-button choice-selection")[0].innerText.toLowerCase() === "get my games")) {
 			var bundleName = document.getElementsByClassName("js-admin-edit")[0].getAttribute("data-machine-name");
 			if (bundleName.indexOf("choice") !== -1) {
 				var bundleNameString = bundleName.replace("_choice", "").replace("_", "-");
 				var choiceLeft1 = document.createElement("div");
+        
+        var appendEle = document.getElementsByClassName("js-choice-whitebox-holder")[0];
+        
+        if (appendEle.getElementsByClassName("button-v2 rectangular-button choice-selection").length > 0 && appendEle.getElementsByClassName("button-v2 rectangular-button choice-selection")[0].innerText.toLowerCase().indexOf("get my games") === 0) {appendEle.getElementsByClassName("whitebox-redux choice-link-box")[0].style.display = "none";}
 				choiceLeft1.className = "whitebox-redux choice-link-box";
 				var choiceLeft2 = document.createElement("div");
 				choiceLeft2.className = "choice-info wrapper";
@@ -779,7 +783,6 @@ if (window.top === window.self) {
 				choiceLeft2.appendChild(choiceLeft23);
 				choiceLeft1.appendChild(choiceLeft2);
 
-				var appendEle = document.getElementsByClassName("js-choice-whitebox-holder")[0];
 				appendEle.appendChild(choiceLeft1);
 				var choiceLeftIframe = document.createElement("iframe");
 				choiceLeftIframe.src = choiceLeft23.href;
@@ -805,7 +808,7 @@ if (window.top === window.self) {
 			}
 		}
 	}
-	setTimeout(customChoiceLeftSelection, 500);
+	if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) { setTimeout(customChoiceLeftSelection, 500); }
 	/* custom Humble Choice Link for game selection from Humble Choice purchases link  - end */
 } else {
 	/* iframe exclusive - retrives choices left from https://www.humblebundle.com/membership/<month>-<year> - start */
