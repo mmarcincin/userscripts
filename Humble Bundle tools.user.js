@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.3.4
+// @version      0.0.3.5
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -756,7 +756,7 @@ if (window.top === window.self) {
 	/* custom Humble Choice Link for game selection from Humble Choice purchases link  - start */
 	function customChoiceLeftSelection() {
 		if (document.getElementById("download-page-referral") && document.getElementsByClassName("js-choice-whitebox-holder").length > 0 && (document.getElementsByClassName("js-choice-whitebox-holder")[0].getElementsByClassName("button-v2 rectangular-button choice-selection").length === 0 || document.getElementsByClassName("js-choice-whitebox-holder")[0].getElementsByClassName("button-v2 rectangular-button choice-selection")[0].innerText.toLowerCase() === "get my games")) {
-			var bundleName = document.getElementsByClassName("js-admin-edit")[0].getAttribute("data-machine-name");
+			var bundleName = document.getElementsByClassName("inner-main-wrapper")[0].getElementsByClassName("js-admin-edit")[0].getAttribute("data-machine-name");
 			if (bundleName.indexOf("choice") !== -1) {
 				var bundleNameString = bundleName.replace("_choice", "").replace("_", "-");
 				var choiceLeft1 = document.createElement("div");
