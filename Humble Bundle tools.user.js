@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.3.5
+// @version      0.0.3.6
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -243,7 +243,14 @@ if (window.top === window.self) {
 								var redeemInfoTemp = gameTable[i].parentNode.getElementsByClassName("custom-instruction")[0].innerText;
 								if (redeemInfoTemp.indexOf(", 20") !== -1) {
 									redeem1 = true;
-									redeemInfo = redeemInfoTemp.substring(redeemInfoTemp.indexOf("Redemption Instructions") + 23).trim();
+									if (redeemInfoTemp.indexOf("Redemption Instructions") !== -1) {
+										redeemInfo = redeemInfoTemp.substring(redeemInfoTemp.indexOf("Redemption Instructions") + 23).trim();
+									} else {
+										if (redeemInfoTemp.indexOf("Redeem") === 0) {
+											redeemInfoTemp = redeemInfoTemp.substring(redeemInfoTemp.indexOf("Redeem") + 6).trim();
+										}
+										redeemInfo = redeemInfoTemp.trim();
+									}
 								}
 							} else {
 								if (gameTable[i].parentNode.getElementsByClassName("expiration-messaging").length > 0) {
@@ -760,10 +767,12 @@ if (window.top === window.self) {
 			if (bundleName.indexOf("choice") !== -1) {
 				var bundleNameString = bundleName.replace("_choice", "").replace("_", "-");
 				var choiceLeft1 = document.createElement("div");
-        
-        var appendEle = document.getElementsByClassName("js-choice-whitebox-holder")[0];
-        
-        if (appendEle.getElementsByClassName("button-v2 rectangular-button choice-selection").length > 0 && appendEle.getElementsByClassName("button-v2 rectangular-button choice-selection")[0].innerText.toLowerCase().indexOf("get my games") === 0) {appendEle.getElementsByClassName("whitebox-redux choice-link-box")[0].style.display = "none";}
+
+				var appendEle = document.getElementsByClassName("js-choice-whitebox-holder")[0];
+
+				if (appendEle.getElementsByClassName("button-v2 rectangular-button choice-selection").length > 0 && appendEle.getElementsByClassName("button-v2 rectangular-button choice-selection")[0].innerText.toLowerCase().indexOf("get my games") === 0) {
+					appendEle.getElementsByClassName("whitebox-redux choice-link-box")[0].style.display = "none";
+				}
 				choiceLeft1.className = "whitebox-redux choice-link-box";
 				var choiceLeft2 = document.createElement("div");
 				choiceLeft2.className = "choice-info wrapper";
@@ -808,7 +817,9 @@ if (window.top === window.self) {
 			}
 		}
 	}
-	if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) { setTimeout(customChoiceLeftSelection, 500); }
+	if (window.location.href.indexOf("https://www.humblebundle.com/downloads?key=") === 0) {
+		setTimeout(customChoiceLeftSelection, 500);
+	}
 	/* custom Humble Choice Link for game selection from Humble Choice purchases link  - end */
 } else {
 	/* iframe exclusive - retrives choices left from https://www.humblebundle.com/membership/<month>-<year> - start */
