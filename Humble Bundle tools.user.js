@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Humble Bundle tools
 // @description  Total cost, game keys export and other enhancements
-// @version      0.0.3.6
+// @version      0.0.3.7
 // @author       https://github.com/mmarcincin/userscripts
 // @namespace    https://github.com/mmarcincin/userscripts
 // @include      https://www.humblebundle.com/*
@@ -453,12 +453,14 @@ if (window.top === window.self) {
 	function addDropdownLink() {
 		if (document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items user-items nav-dropdown-items").length > 0) {
 			var appendEle = document.getElementsByClassName("js-disable-body-scroll navbar-item-dropdown-items user-items nav-dropdown-items")[0];
-			var troveLink = document.createElement("span");
-			troveLink.innerHTML = '<a href="/membership/collection?hmb_source=navbar" class="navbar-item-dropdown-item">       <i class="navbar-item-dropdown-icon hb hb-library has-perks"></i>       Humble App/Trove     </a>';
+			/*
+      var troveLink = document.createElement("span");
+			troveLink.innerHTML = '<a href="/membership/collection" class="navbar-item-dropdown-item">       <i class="navbar-item-dropdown-icon hb hb-library has-perks"></i>       Humble App/Trove     </a>';
 			appendEle.insertBefore(troveLink, appendEle.getElementsByClassName("navbar-item-dropdown-item")[1]);
+			*/
 			var billingLink = document.createElement("span");
-			billingLink.innerHTML = '<a href="/user/subscriptions/humble_monthly/billing?hmb_source=navbar" class="navbar-item-dropdown-item">      <i class="navbar-item-dropdown-icon hb hb-money has-perks"></i>      Billing    </a>';
-			appendEle.insertBefore(billingLink, appendEle.querySelector('a[href="/user/settings?hmb_source=navbar"]'));
+			billingLink.innerHTML = '<a href="/user/subscriptions/humble_monthly/billing" class="navbar-item-dropdown-item">      <i class="navbar-item-dropdown-icon hb hb-money has-perks"></i>      Billing    </a>';
+			appendEle.insertBefore(billingLink, appendEle.querySelector('a[href="/user/settings"]'));
 			var menuLinks = appendEle.getElementsByTagName("a");
 			var linkImg = document.createElement("i");
 			var logoutEle = appendEle.getElementsByClassName("navbar-item-dropdown-item js-navbar-logout")[0];
@@ -468,45 +470,46 @@ if (window.top === window.self) {
 			for (var i = 0; i < menuLinks.length - 1; i++) {
 				var linkImg = document.createElement("i");
 				switch (menuLinks[i].href) {
-				case "https://www.humblebundle.com/membership/home?hmb_source=navbar":
+				case "https://www.humblebundle.com/membership/home":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-choice has-perks";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/home/library?hmb_source=navbar":
+				case "https://www.humblebundle.com/home/library":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-library";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/home/purchases?hmb_source=navbar":
+				case "https://www.humblebundle.com/home/purchases":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-tier";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/home/keys?hmb_source=navbar":
+				case "https://www.humblebundle.com/home/keys":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-key";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/home/coupons?hmb_source=navbar":
+				case "https://www.humblebundle.com/home/coupons":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-scissors";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/store/wishlist?hmb_source=navbar":
+				case "https://www.humblebundle.com/store/wishlist":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-star";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/user/wallet?hmb_source=navbar":
+				case "https://www.humblebundle.com/user/wallet":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-money";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/refer?hmb_source=navbar":
+				case "https://www.humblebundle.com/refer":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-giftbox";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 					break;
-				case "https://www.humblebundle.com/user/settings?hmb_source=navbar":
+				case "https://www.humblebundle.com/user/settings":
 					linkImg.className = "navbar-item-dropdown-icon hb hb-cog";
 					menuLinks[i].insertBefore(linkImg, menuLinks[i].firstChild);
 				}
 			}
 		}
 	}
+
 
 	addDropdownLink();
 	/* dropdown menu is created with page load and also no longer scrapped when it's opened anymore - start */
@@ -737,7 +740,7 @@ if (window.top === window.self) {
 				urlDateFragment = "\<wrong month\>";
 			}
 
-			var curHBselection = "https://www.humblebundle.com/membership/" + urlDateFragment + "-" + currentYear + "?hmb_source=navbar";
+			var curHBselection = "https://www.humblebundle.com/membership/" + urlDateFragment + "-" + currentYear;
 
 			console.log(curHBselection);
 			var curChoiceEle = document.createElement("a");
